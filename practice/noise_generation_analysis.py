@@ -11,6 +11,3 @@ print("variance of signal with low noise: ",np.var(noisy_signal_low))
 print("variance of signal with high noise: ",np.var(noisy_signal_high))
 print("standard deviation of signal with low noise: ",np.std(noisy_signal_low))
 print("Standard deviation of signal with high noise: ",np.std(noisy_signal_high))
-
-
-
