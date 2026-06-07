@@ -19,3 +19,59 @@ for snr in snr_values:
     entropy=compute_spectral_entropy(signal)
     print( f"SNR = {snr:>3} dB",
         f"Entropy = {entropy:.4f}")
+X_feat= np.load(
+    "data/X_features.npy"
+)
+print(
+    "Loaded Shape:",
+    X_feat.shape
+)
+# Correlation Analysis
+feature_names = [
+    "Variance",
+    "Kurtosis",
+    "Skewness",
+    "ZCR",
+    "Spectral Entropy",
+    "FFT Peak Ratio",
+    "Mean Absolute Value"
+]
+correlations = []
+print("\nFeature Correlations with SNR\n")
+for i in range(
+    X_feat.shape[1]
+):
+    corr = np.corrcoef(
+        X_feat[:, i],
+        y
+    )[0, 1]
+    correlations.append(corr)
+    print(
+        f"{feature_names[i]:20s}: {corr:.4f}"
+    )
+
+# Correlation Bar Plot
+plt.figure(
+    figsize=(10, 5)
+)
+plt.bar(
+    feature_names,
+    correlations
+)
+plt.title(
+    "Feature Correlation with SNR"
+)
+plt.xlabel(
+    "Features"
+)
+
+plt.ylabel(
+    "Correlation Coefficient"
+)
+plt.xticks(
+    rotation=45
+)
+plt.grid(True)
+plt.tight_layout()
+plt.savefig("plots/bar chart of comparison correlation of different features and snr")
+plt.show()
