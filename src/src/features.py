@@ -6,7 +6,9 @@ X_raw=np.load("data/X_raw.npy")
 y=np.load("data/y_snr.npy")
 #define neccesary functions
 def zero_crossing_rate(signal):
-    return np.mean(np.diff(np.sign(signal)!=0))
+    return np.mean(
+        np.diff(np.sign(signal)) != 0
+    )
 def spectral_entropy_fun(signal):
     fft_values=np.fft.rfft(signal)
     power=np.abs(fft_values)**2
