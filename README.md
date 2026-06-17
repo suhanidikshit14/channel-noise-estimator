@@ -9,7 +9,7 @@
 
 > An end-to-end machine learning pipeline that estimates the **Signal-to-Noise Ratio (SNR)** of noisy communication channel signals from handcrafted signal features — built entirely from scratch using NumPy and scikit-learn, no external dataset required.
 
-**[🔴 Live Demo →](https://your-app.streamlit.app)**  &nbsp; | &nbsp; **[📓 View Notebooks →](./notebooks/)**
+**[🔴 Live Demo →](https://channel-noise-estimator-hbtfxrltefmw5ee2qdswr3.streamlit.app)/**  &nbsp; | &nbsp; **[📓 View Notebooks →](./notebooks/)**
 
 ---
 
@@ -114,7 +114,8 @@ features = extract_features(noisy_signal)  # returns array of shape (7,)
 
 Feature importance ranking from the best-performing Random Forest model:
 
-![FEATURE IMPORTANCE](image.png)
+<img width="800" height="500" alt="image" src="https://github.com/user-attachments/assets/6f4fba52-e56d-4555-b99c-a6697c4dddf7" />
+
 ---
 
 ## 📈 Models & Results
@@ -123,7 +124,7 @@ Three regression models were trained and compared. All use `StandardScaler` for 
 
 ### Model Comparison
 
-|<div>
+<div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -220,7 +221,7 @@ The Streamlit dashboard provides live SNR estimation with full signal visualisat
 streamlit run app_final.py
 ```
 
-**[🔴 Live Demo →](https://your-app.streamlit.app)**
+**[🔴 Live Demo →](https://channel-noise-estimator-hbtfxrltefmw5ee2qdswr3.streamlit.app/)**
 
 ---
 
