@@ -107,12 +107,7 @@ for sig_type in signal_types:
 X_raw = np.array(X_raw)
 
 y = np.array(y)
-
-
-# -----------------------------------
 # Save Dataset
-# -----------------------------------
-
 os.makedirs(
     "data",
     exist_ok=True
@@ -127,12 +122,7 @@ np.save(
     "data/y_snr.npy",
     y
 )
-
-
-# -----------------------------------
 # Verification
-# -----------------------------------
-
 print("\nDataset Generation Complete!")
 
 print(
