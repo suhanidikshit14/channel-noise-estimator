@@ -181,9 +181,7 @@ Three regression models were trained and compared. All use `StandardScaler` for 
 ### SNR Estimation Error
 
 The model performs best in the mid-SNR region where the training data contains highly distinguishable signal and noise characteristics. At very low SNR, noise dominates the signal, while at very high SNR the feature distributions may become compressed, reducing sensitivity to SNR changes. As a result, slightly larger prediction errors are observed at both ends of the SNR range.
-![MAE vs SNR](image-1.png)
-
-
+<img width="800" height="500" alt="image" src="https://github.com/user-attachments/assets/b9ce272d-9498-4f89-a9c2-0adb5ae0d112" />
 ```
 
 ### Cross-Validation
