@@ -114,16 +114,7 @@ features = extract_features(noisy_signal)  # returns array of shape (7,)
 
 Feature importance ranking from the best-performing Random Forest model:
 
-```
-Spectral Entropy     ████████████████████  38%
-FFT Peak Ratio       ████████████          22%
-Kurtosis             ████████              15%
-Variance             ██████                11%
-Zero-Crossing Rate   ████                   8%
-Skewness             ██                     4%
-Mean Absolute Value  █                      2%
-```
-
+![FEATURE IMPORTANCE](image.png)
 ---
 
 ## 📈 Models & Results
@@ -132,25 +123,67 @@ Three regression models were trained and compared. All use `StandardScaler` for 
 
 ### Model Comparison
 
-| Model | MAE (dB) ↓ | R² Score ↑ | Training Time |
-|---|---|---|---|
-| Linear Regression | 4.82 | 0.71 | < 1s |
-| **Random Forest** | **1.74** | **0.96** | ~8s |
-| Gradient Boosting | 1.91 | 0.95 | ~25s |
+|<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Model</th>
+      <th>MAE</th>
+      <th>RMSE</th>
+      <th>R²</th>
+      <th>Training Time (s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>Random Forest</td>
+      <td>0.573529</td>
+      <td>0.941638</td>
+      <td>0.994046</td>
+      <td>15.262266</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Gradient Boosting</td>
+      <td>0.986647</td>
+      <td>1.296902</td>
+      <td>0.988707</td>
+      <td>8.398281</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Linear Regression</td>
+      <td>2.357359</td>
+      <td>3.001206</td>
+      <td>0.939521</td>
+      <td>0.047834</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 > ✅ **Random Forest selected** as best model — highest R², lowest MAE, faster than Gradient Boosting.
 
-### Per-SNR Estimation Error
+### SNR Estimation Error
 
-The model performs best at high SNR where the signal structure is clearly visible. Error rises at low SNR, which is expected and consistent with real-world channel behaviour:
+The model performs best in the mid-SNR region where the training data contains highly distinguishable signal and noise characteristics. At very low SNR, noise dominates the signal, while at very high SNR the feature distributions may become compressed, reducing sensitivity to SNR changes. As a result, slightly larger prediction errors are observed at both ends of the SNR range.
+![MAE vs SNR](image-1.png)
 
-```
-SNR Level    MAE
-+20 dB       0.3 dB   ████
-+10 dB       0.8 dB   ████████
-  0 dB       1.9 dB   ███████████████████
--10 dB       3.4 dB   ██████████████████████████████████
--20 dB       5.1 dB   ███████████████████████████████████████████████████
+
 ```
 
 ### Cross-Validation
@@ -158,8 +191,15 @@ SNR Level    MAE
 5-fold cross-validation on the full dataset:
 
 ```
-CV MAE:  1.81 ± 0.12 dB
-CV R²:   0.95 ± 0.01
+fold MAEs: 
+Fold 1: 0.5712
+Fold 2: 0.5702
+Fold 3: 0.5827
+Fold 4: 0.5916
+Fold 5: 0.5967
+
+Mean MAE: 0.5825
+Std MAE: 0.0106
 ```
 
 ---
@@ -179,7 +219,7 @@ The Streamlit dashboard provides live SNR estimation with full signal visualisat
 
 **Run the dashboard locally:**
 ```bash
-streamlit run app.py
+streamlit run app_final.py
 ```
 
 **[🔴 Live Demo →](https://your-app.streamlit.app)**
@@ -205,10 +245,12 @@ ChannelNoiseEstimator/
 ├── models/
 │   ├── rf_snr_estimator.pkl           # Saved Random Forest model
 │   └── scaler.pkl                     # Saved StandardScaler
-├── app.py                             # Streamlit dashboard
+├── app_final.py                             # Streamlit dashboard
 ├── requirements.txt
 └── README.md
-```
+├── plots/
+├── practice/
+
 
 ---
 
@@ -234,32 +276,21 @@ python src/models.py          # trains models, saves to models/
 
 **Step 4 — Launch the dashboard**
 ```bash
-streamlit run app.py
+streamlit run app_final.py
 ```
 
 Open [http://localhost:8501](http://localhost:8501) in your browser.
 
 **Requirements:**
 ```
-numpy==1.24.0
-pandas==2.0.0
-scikit-learn==1.3.0
-scipy==1.11.0
-matplotlib==3.7.0
-seaborn==0.12.0
-streamlit==1.28.0
+streamlit==1.58.0
+numpy==2.4.6
+scipy==1.17.1
+pandas==3.0.3
+matplotlib==3.10.9
+scikit-learn==1.9.0
+joblib==1.5.3
 ```
-
----
-
-## 💡 Key Learnings
-
-**ECE insight:** Spectral entropy is the single most powerful feature for SNR estimation. When noise is added to a signal, it flattens the frequency spectrum — raising entropy. This directly connects Fourier analysis (ECE) to feature-based ML (data science).
-
-**ML insight:** Random Forest significantly outperformed Linear Regression (MAE 1.74 vs 4.82 dB) because the relationship between signal features and SNR is non-linear — Linear Regression cannot capture the curved degradation at low SNR.
-
-**Engineering realism:** The per-SNR error curve mirrors real-world SNR estimator behaviour. Any production SNR estimator (e.g. in LTE/5G receivers) shows the same pattern — high accuracy at good channel conditions, degraded estimation in deep fade.
-
 ---
 
 ## 🔭 Future Work
@@ -274,12 +305,8 @@ streamlit==1.28.0
 
 ## 👤 Author
 
-**Your Name**
-B.E. Electronics & Communication Engineering
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://linkedin.com/in/yourprofile)
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?logo=github)](https://github.com/yourusername)
-
+**Suhani Dikshit**
+Dual Degree(Integrated Mtech) Electronics & Communication Engineering
 ---
 
 ## 📄 License
